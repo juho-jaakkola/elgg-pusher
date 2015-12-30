@@ -1,0 +1,26 @@
+{
+	"name": "juho-jaakkola/elgg-pusher",
+	"description": "Push data from server to clients on an Elgg site.",
+	"type": "elgg-plugin",
+	"keywords": [
+		"elgg",
+		"plugin"
+	],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Juho Jaakkola",
+			"email": "juho@elgg.org",
+			"role": "Developer"
+		}
+	],
+    "require": {
+        "cboden/ratchet": "0.3.*",
+        "react/zmq": "0.2.*|0.3.*"
+    },
+	"autoload": {
+        "psr-0": {
+            "Pusher": "classes"
+        }
+    }
+}
