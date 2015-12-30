@@ -1,6 +1,5 @@
 <?php
 
-require dirname(dirname(__DIR__)) . "/engine/start.php";
 require __DIR__ . '/vendor/autoload.php';
 
 $loop   = React\EventLoop\Factory::create();
