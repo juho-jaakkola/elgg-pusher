@@ -61,6 +61,18 @@ class Server implements MessageComponentInterface {
 		// TODO Should the storage be injected?
 		// TODO Remove users from the storage when they log out.
 		$this->subscribers[$data->guid] = $from;
+
+		$entry = new \stdClass();
+		$entry->users = array_keys($this->subscribers);
+		$entry = json_encode($entry);
+
+		foreach ($this->subscribers as $user_guid => $connection) {
+			if ($data->guid == $user_guid) {
+				continue;
+			}
+
+			$connection->send($entry);
+		}
 	}
 
 	/**

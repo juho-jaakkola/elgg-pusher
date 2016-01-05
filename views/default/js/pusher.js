@@ -10,14 +10,26 @@ define(function(require) {
 	// TODO Check whether the client supports WebSockets
 	var conn = new WebSocket(url);
 
+	// Callbacks for plugin specific messages
 	var consumers = {};
 
+	// Callbacks for site-wide messages
+	var listeners = {};
+
 	/**
-	 * Register a plugin as a push server consumer
+	 * Registers a callback for plugin specific messages
 	 */
 	function registerConsumer(consumer, callback) {
 		console.log('Registering consumer ' + consumer);
 		consumers[consumer] = callback;
+	}
+
+	/**
+	 * Registers a listener for generic site-wide messages
+	 */
+	function registerListener(listener, callback) {
+		console.log('Registering listener ' + listener);
+		listeners[listener] = callback;
 	}
 
 	// TODO How to verify all plugins have registered as
@@ -39,6 +51,7 @@ define(function(require) {
 	};
 
 	/**
+	 * Route server originated messages to correct consumers
 	 *
 	 * @param {Object} e
 	 */
@@ -47,13 +60,22 @@ define(function(require) {
 
 		console.log('Received a message from server');
 		console.log(data);
-		console.log(data.consumer);
-		console.log(consumers[data.consumer]);
+
+		if (consumers[data.consumer] == undefined) {
+			// There was no plugin defined, so broadcast
+			// the message to all listeners
+			$.each(listeners, function(name, callback) {
+				callback(data);
+			});
+
+			return;
+		}
 
 		consumers[data.consumer](data);
 	};
 
 	return {
-		'registerConsumer': registerConsumer
+		'registerConsumer': registerConsumer,
+		'registerListener': registerListener
 	};
 });
