@@ -3,9 +3,10 @@
  */
 define(function(require) {
 	var elgg = require('elgg');
+	var settings = require('pusher/settings');
 
 	var url_segments = elgg.parse_url(elgg.get_site_url());
-	var url = 'ws://' + url_segments.host + ':1234';
+	var url = settings.scheme + url_segments.host + ':' + settings.port;
 
 	// TODO Check whether the client supports WebSockets
 	var conn = new WebSocket(url);
