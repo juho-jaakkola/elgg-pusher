@@ -40,8 +40,6 @@ class Server implements MessageComponentInterface {
 	public function onOpen(ConnectionInterface $conn) {
 		// Store the connection for sending messages later
 		$this->clients->attach($conn);
-
-		echo "New connection from a client! ({$conn->resourceId})\n";
 	}
 
 	/**
@@ -53,9 +51,7 @@ class Server implements MessageComponentInterface {
 	public function onMessage(ConnectionInterface $from, $msg) {
 		$data = json_decode($msg);
 
-		echo "Connection {$from->resourceId} is subscribing for notifications\n";
-
-		var_export($msg) . "\n";
+		echo "New connection: {$from->resourceId} (GUID {$data->guid})\n";
 
 		// TODO Authenticate the user
 		// TODO Should the storage be injected?
