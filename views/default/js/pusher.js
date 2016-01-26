@@ -5,6 +5,10 @@ define(function(require) {
 	var elgg = require('elgg');
 	var settings = require('pusher/settings');
 
+	if (!elgg.is_logged_in()) {
+		return;
+	}
+
 	var url_segments = elgg.parse_url(elgg.get_site_url());
 	var url = settings.scheme + url_segments.host + ':' + settings.port;
 
