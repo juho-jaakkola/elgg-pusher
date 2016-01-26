@@ -58,13 +58,7 @@ class Server implements MessageComponentInterface {
 		// TODO Remove users from the storage when they log out.
 		$this->subscribers[$data->guid] = $from;
 
-		$entry = new \stdClass();
-		$entry->users = array_keys($this->subscribers);
-		$entry = json_encode($entry);
-
-		foreach ($this->subscribers as $user_guid => $connection) {
-			$connection->send($entry);
-		}
+		$this->broadcastOnlineUsers();
 	}
 
 	/**
@@ -126,6 +120,9 @@ class Server implements MessageComponentInterface {
 		$this->clients->detach($conn);
 
 		echo "Connection {$conn->resourceId} (GUID {$guid}) has disconnected\n";
+
+		// Let connected users know that the users has disconnected
+		$this->broadcastOnlineUsers();
 	}
 
 	/**
@@ -151,5 +148,18 @@ class Server implements MessageComponentInterface {
 		echo "An error has occurred: {$e->getMessage()}\n";
 
 		$conn->close();
+	}
+
+	/**
+	 * Lets connected users know about each other
+	 */
+	private function broadcastOnlineUsers() {
+		$entry = new \stdClass();
+		$entry->users = array_keys($this->subscribers);
+		$entry = json_encode($entry);
+
+		foreach ($this->subscribers as $connection) {
+			$connection->send($entry);
+		}
 	}
 }
