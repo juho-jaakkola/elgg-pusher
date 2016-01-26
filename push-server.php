@@ -7,7 +7,7 @@ require __DIR__ . '/vendor/autoload.php';
 $elgg = \Elgg\Application::start();
 
 // Get the websocket port from plugin settings
-$port = _elgg_services()->plugins->get('pusher')->getSetting('port');
+$port = _elgg_services()->plugins->get('pusher')->getSetting('private_port');
 
 $loop   = React\EventLoop\Factory::create();
 $pusher = new \Pusher\Server();
