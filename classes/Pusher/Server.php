@@ -67,10 +67,6 @@ class Server implements MessageComponentInterface {
 		$entry = json_encode($entry);
 
 		foreach ($this->subscribers as $user_guid => $connection) {
-			if ($data->guid == $user_guid) {
-				continue;
-			}
-
 			$connection->send($entry);
 		}
 	}
