@@ -115,10 +115,21 @@ class Server implements MessageComponentInterface {
 	 * @param ConnectionInterface $conn
 	 */
 	public function onClose(ConnectionInterface $conn) {
+		$guid = 0;
+
+		foreach ($this->subscribers as $user_guid => $connection) {
+			// Remove the user from subscribers
+			if ($conn->resourceId === $connection->resourceId) {
+				$guid = $user_guid;
+				unset($this->subscribers[$user_guid]);
+				break;
+			}
+		}
+
 		// The connection is closed, remove it, as we can no longer send it messages
 		$this->clients->detach($conn);
 
-		echo "Connection {$conn->resourceId} has disconnected\n";
+		echo "Connection {$conn->resourceId} (GUID {$guid}) has disconnected\n";
 	}
 
 	/**
