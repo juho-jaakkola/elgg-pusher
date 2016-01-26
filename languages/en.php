@@ -9,4 +9,6 @@ return array(
 	'pusher:settings:scheme:insecure' => 'ws:// (insecure)',
 	'pusher:settings:scheme:secure' => 'wss:// (secure)',
 	'pusher:settings:scheme:desc' => 'Warning: insecure connection should be used only on development servers.',
+	'pusher:settings:notice' => 'If you modified the push server settings, you need to %s and then restart the push server.',
+	'pusher:settings:notice:link' => 'flush the caches',
 );
