@@ -17,4 +17,8 @@ elgg_register_event_handler('init', 'system', function() {
 			elgg_add_admin_notice('pusher', elgg_echo('pusher:settings:notice', array($link)));
 		}
 	});
+
+	elgg_register_plugin_hook_handler('message', 'pusher', function($hook, $type, $message, $params) {
+		echo 'Testing the [message, pusher] hook. ' . $message;
+	});
 });

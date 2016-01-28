@@ -10,7 +10,7 @@ $elgg = \Elgg\Application::start();
 $port = _elgg_services()->plugins->get('pusher')->getSetting('private_port');
 
 $loop   = React\EventLoop\Factory::create();
-$pusher = new \Pusher\Server();
+$pusher = new \Pusher\Server(_elgg_services());
 
 // Listen for the web server to make a ZeroMQ push after a request
 $context = new React\ZMQ\Context($loop);

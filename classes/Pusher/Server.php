@@ -18,11 +18,17 @@ class Server implements MessageComponentInterface {
 	protected $clients;
 
 	/**
+	 * @var $services
+	 */
+	private $services;
+
+	/**
 	 *
 	 */
-	public function __construct() {
+	public function __construct($services) {
 		$this->clients = new \SplObjectStorage;
 		$this->subscribers = array();
+		$this->services = $services;
 	}
 
 	/**
@@ -57,6 +63,13 @@ class Server implements MessageComponentInterface {
 		// TODO Should the storage be injected?
 		// TODO Remove users from the storage when they log out.
 		$this->subscribers[$data->guid] = $from;
+
+		$params = array(
+			'user_guid' => $data->guid,
+			'message' => $msg,
+			'connection' => $from,
+		);
+		$this->services->hooks->trigger('message', 'pusher', $params, $msg);
 
 		$this->broadcastOnlineUsers();
 	}
