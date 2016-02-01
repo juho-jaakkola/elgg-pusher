@@ -22,5 +22,8 @@
         "psr-0": {
             "Pusher": "classes"
         }
+    },
+    "extra": {
+    	"installer-name": "pusher"
     }
 }
