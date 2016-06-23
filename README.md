@@ -21,10 +21,10 @@ You can use software such as [stunnel](https://www.stunnel.org/) to achieve this
  3. Enter plugin settings
  4. Flush Elgg caches
  5. Enable the push server
-     - Example command on a Unix-like OS using the `nohub` command:
+     - Example command on a Unix-like OS using the `nohup` command:
 
 		```
-		nohub /usr/bin/php5 -f /var/www/elgg/mod/pusher/push-server.php
+		nohup /usr/bin/php5 -f /var/www/elgg/mod/pusher/push-server.php
 		```
 
  6. Logged in users should now receive real-time updates from plugins that have support for the push server
