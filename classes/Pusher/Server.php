@@ -56,7 +56,7 @@ class Server implements MessageComponentInterface {
 		// TODO Authenticate the user
 		// TODO Should the storage be injected?
 		// TODO Remove users from the storage when they log out.
-		$this->subscribers[$data->guid] = $from;
+		$this->subscribers[$data->guid][] = $from;
 
 		$this->broadcastOnlineUsers();
 	}
@@ -84,9 +84,10 @@ class Server implements MessageComponentInterface {
 
 		var_dump($data);
 
-		if (isset($this->subscribers[$data->recipient_guid])) {
-			$connection = $this->subscribers[$data->recipient_guid];
-			$connection->send($entry);
+		if (!empty($this->subscribers[$data->recipient_guid])) {
+			foreach ($this->subscribers[$data->recipient_guid] as $connection) {
+				$connection->send($entry);
+			}
 		}
 	}
 
@@ -107,12 +108,14 @@ class Server implements MessageComponentInterface {
 	public function onClose(ConnectionInterface $conn) {
 		$guid = 0;
 
-		foreach ($this->subscribers as $user_guid => $connection) {
-			// Remove the user from subscribers
-			if ($conn->resourceId === $connection->resourceId) {
-				$guid = $user_guid;
-				unset($this->subscribers[$user_guid]);
-				break;
+		foreach ($this->subscribers as $user_guid => $connections) {
+			foreach ($connections as $i => $connection) {
+				// Remove the user from subscribers
+				if ($conn->resourceId === $connection->resourceId) {
+					$guid = $user_guid;
+					unset($this->subscribers[$user_guid][$i]);
+					break;
+				}
 			}
 		}
 
@@ -158,8 +161,10 @@ class Server implements MessageComponentInterface {
 		$entry->users = array_keys($this->subscribers);
 		$entry = json_encode($entry);
 
-		foreach ($this->subscribers as $connection) {
-			$connection->send($entry);
+		foreach ($this->subscribers as $connections) {
+			foreach ($connections as $connection) {
+				$connection->send($entry);
+			}
 		}
 	}
 }
